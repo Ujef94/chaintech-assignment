@@ -9,8 +9,30 @@ const Login = ({ setUser, setView }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [emailError, setEmailError] = useState('');
 
-    const handleLogin = () => {
+
+    // Function to validate email format
+    const validateEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    };
+
+    const handleEmailChange = (e) => {
+        const lowercaseEmail = e.target.value.toLowerCase(); // Convert email to lowercase
+        setEmail(lowercaseEmail);
+
+        // Validate email format
+        if (!validateEmail(lowercaseEmail)) {
+            setEmailError('Invalid email format');
+        } else {
+            setEmailError('');
+        }
+    };
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+
         // Validate if fields are empty
         if (!email || !password) {
             setError('Please enter both email and password');
@@ -25,7 +47,7 @@ const Login = ({ setUser, setView }) => {
             setView('account');
             navigate('/account')
         } else {
-            setError('Invalid credentials');
+            setError('User not found or Invalid credentials');
         }
     };
 
@@ -38,14 +60,17 @@ const Login = ({ setUser, setView }) => {
                 type="email"
                 placeholder="Enter Your Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                required
+                onChange={handleEmailChange}
             />
+            {emailError && <p className="error text-danger mb-2">{emailError}</p>} {/* Display email error */}
             <input
                 className='p-2 my-3'
                 type="password"
                 placeholder="Enter Your Password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
+                required
             />
             <button className='btn btn-primary' onClick={handleLogin}>Login</button>
             {/* <button className='btn btn-primary' onClick={() => navigate('/Register')}>Don't have an account</button> */}

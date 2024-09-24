@@ -9,6 +9,7 @@ const Account = ({ user, setUser, setView }) => {
     const [newEmail, setNewEmail] = useState(user.email);
     const [newName, setNewName] = useState(user.name);
     const [newPassword, setNewPassword] = useState(user.password);
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         setNewEmail(user.email);
@@ -20,7 +21,7 @@ const Account = ({ user, setUser, setView }) => {
         const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
         const updatedUsers = storedUsers.map(u => {
             if (u.email === user.email) {
-                return { ...u, email: newEmail, name: newName, password: newPassword};
+                return { ...u, email: newEmail, name: newName, password: newPassword };
             }
             return u;
         });
@@ -53,10 +54,19 @@ const Account = ({ user, setUser, setView }) => {
             />
             <input
                 className='mt-2 p-2'
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={newPassword}
                 onChange={e => setNewPassword(e.target.value)}
             />
+            <div className="form-group show-password">
+                <input
+                    type="checkbox"
+                    id="showPassword"
+                    checked={showPassword}
+                    onChange={() => setShowPassword(!showPassword)}
+                />
+                <label htmlFor="showPassword">Show Password</label>
+            </div>
             <div className=''>
                 <button className='mt-3 p-2 bg-primary border-none rounded-1 text-white' onClick={handleUpdate}>Update</button>
                 <button className='mt-1 p-2 bg-primary border-none rounded-1 text-white' onClick={handleLogout}>Logout</button>
